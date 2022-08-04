@@ -1,0 +1,75 @@
+# main.tf
+module "us_east_1" {
+  source = "../doppler_destination"
+  providers = {
+    aws = aws
+  }
+  app                         = var.app
+  internal                    = var.internal
+  container_port              = var.container_port
+  kpl_port                    = var.kpl_port
+  log_level                   = var.log_level
+  replicas                    = var.replicas
+  health_check                = var.health_check
+  saml_role                   = var.saml_role
+  shard_count                 = var.shard_count_us_east_1
+  firehose_buffer_size        = var.firehose_buffer_size
+  firehose_buffer_interval    = var.firehose_buffer_interval
+  deregistration_delay        = var.deregistration_delay
+  tags                        = var.tags
+  environment                 = var.environment_us_east_1
+  region                      = var.region_us_east_1
+  vpc                         = var.vpc_us_east_1
+  private_subnets             = var.private_subnets_us_east_1
+  public_subnets              = var.public_subnets_us_east_1
+  target_bucket_name          = var.target_bucket_name_us_east_1
+  route53_zone_id             = data.aws_route53_zone.app.zone_id
+  hosted_zone                 = var.hosted_zone
+  common_subdomain            = var.common_subdomain
+  identity_domain             = aws_route53_record.identity.fqdn
+  identity_zone_id            = data.aws_route53_zone.v1.zone_id
+  telemetry_domain            = aws_route53_record.telemetry.fqdn
+  telemetry_zone_id           = data.aws_route53_zone.v1.zone_id
+  ecs_autoscale_min_instances = var.ecs_autoscale_min_instances_us_east_1
+  ecs_autoscale_max_instances = var.ecs_autoscale_max_instances_us_east_1
+  enable_data_archival        = true
+}
+
+module "us_west_2" {
+  source = "../doppler_source"
+  providers = {
+    aws = aws.us-west-2
+  }
+  app                               = var.app
+  internal                          = var.internal
+  container_port                    = var.container_port
+  kpl_port                          = var.kpl_port
+  log_level                         = var.log_level
+  replicas                          = var.replicas
+  health_check                      = var.health_check
+  saml_role                         = var.saml_role
+  shard_count                       = var.shard_count_us_west_2
+  firehose_buffer_size              = var.firehose_buffer_size
+  firehose_buffer_interval          = var.firehose_buffer_interval
+  deregistration_delay              = var.deregistration_delay
+  tags                              = var.tags
+  environment                       = var.environment_us_west_2
+  region                            = var.region_us_west_2
+  vpc                               = var.vpc_us_west_2
+  private_subnets                   = var.private_subnets_us_west_2
+  public_subnets                    = var.public_subnets_us_west_2
+  target_bucket_name                = var.target_bucket_name_us_west_2
+  route53_zone_id                   = data.aws_route53_zone.app.zone_id
+  hosted_zone                       = var.hosted_zone
+  common_subdomain                  = var.common_subdomain
+  identity_domain                   = aws_route53_record.identity.fqdn
+  identity_zone_id                  = data.aws_route53_zone.v1.zone_id
+  telemetry_domain                  = aws_route53_record.telemetry.fqdn
+  telemetry_zone_id                 = data.aws_route53_zone.v1.zone_id
+  destination_target_bucket_arn     = module.us_east_1.destination_target_bucket_arn
+  destination_target_bucket_kms_arn = module.us_east_1.destination_target_bucket_kms_arn
+  destination_region                = var.destination_region
+  ecs_autoscale_min_instances       = var.ecs_autoscale_min_instances_us_west_2
+  ecs_autoscale_max_instances       = var.ecs_autoscale_max_instances_us_west_2
+  enable_data_archival              = true
+}

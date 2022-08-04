@@ -1,0 +1,5 @@
+*.yml
+*.sh
+README.md
+Makefile
+Dockerfile

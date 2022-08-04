@@ -1,0 +1,86 @@
+config:
+  target: "https://dev.${DOMAIN_NAME}"
+  plugins:
+    cloudwatch:
+      namespace: doppler-load
+
+  phases:
+    - name: "1 -> 50000 rps over 10 minutes"
+      arrivalRate: 1
+      rampTo: 50000
+      duration: 600
+
+  processor: "./unknownid.js"
+
+scenarios:
+  - name: "Send a registration"
+    flow:
+      - function: "unknownId"
+      - post:
+          url: "/v1/reg"
+          json:
+            wmukid: "{{ unknownId }}"
+            appId: artillery
+            attuuid: 173ec1ee-3f30-478b-8d55-79c5934d6ff1
+            wmhhid: m1c8f4tyq2ixux5ggodwak
+            wminid: sg0ire3zkjhrsgwm3xwd3r
+            brand: example
+            subBrand: politics
+            domain: example.org
+            userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:75.0) Gecko/20100101 Firefox/75.0"
+            platform: web
+            ip: 127.0.0.1
+            city: MARIETTA
+            state: GA
+            zips:
+              - "30066"
+            country: US
+            library:
+              name: prism
+              version: 1.0.0
+            ids:
+              kruxid: "123"
+              mcid: "abc"
+            cookies:
+              portmeirion_id: 61b128b6-677e-4cf3-961b-7fbf12a6466b
+              br_user_type: Anonymous
+              orbis_session: "%7B%22userID%22%3A%22476dcf1b-6871-4b8e-b046-c40e5b755550%22%2C%22sessionToken%22%3A%22eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoic2Vzc2lvbiIsInVpZCI6IjQ3NmRjZjFiLTY4NzEtNGI4ZC1iMEQ2LWM0MGU1Yjc1NTU1MCIsImFub24iOnRydWUsInBlcm1pc3Npb25zIjpbImFsbG93LWFueS1nZW9sb2NhdGlvbiJdLCJhcGlLZXkiOiJmMmI2ZWI2MS1iNzVlLTRhZjItYjg3Yi0zYjBhZjQ4NDZiYzciLCJleHAiOjE1ODk3NDc5NzEsImlhdCI6MTU4NDU2Mzk3MSwiaXNzIjoiT3JiaXMtT0FNLVYxIiwic3ViIjoiNDc2ZGNmMWItNjg3MS00YjhkLWIwNDYtYzQwZTViNzU1NTUwIn0.zJscVSttdrq40ggbT9R2hMiTdFdnk-ib3JguKi5c6UqwqnIKLewaldWK3Eg1WUIB_fJubdN0I45OBXMakylNGQ%22%7D"
+              _cb_ls: "1"
+              ads_session: "9"
+              __gads: ID=1b946732c81dec9f:T=1584563975:S=ALNI_MaGunmNmhEU-D3STn3uqWE-JBVLIq
+              first_pageview: "false"
+              ab.storage.deviceId.769da9a6-6139-4f3e-b029-6973927a490g: "%7B%22g%22%3A%22302b86ed-4208-5d1d-194d-d25948e00232%22%2C%22c%22%3A1584632883143%2C%22l%22%3A1584632883143%7D"
+              ug: 5d079f140ea7ac0a3f860700161dc11e
+              ugs: "1"
+              _gcl_au: "1.1.439769660.1584632885"
+              OptanonConsent: "isIABGlobal=false&datestamp=Thu+Mar+19+2020+11%3A48%3A04+GMT-0400+(Eastern+Daylight+Time)&version=5.10.0&landingPath=NotLandingPage&groups=smv%3A1%2Cadv%3A1%2CBG150%3A1%2Cpf%3A1%2Cpz%3A1%2Csm%3A1%2Creq%3A1&hosts=&consentId=cac95aae-003d-4fe8-899c-db25ad76f147&interactionCount=0&AwaitingReconsent=false"
+              gmid: BFNZKn45S0Y2Ip_PkUHnPzjlgJDrQ59fwgqUFt2qUae
+              ucid: WfIiAEZO6AY__x0CX5sx4q
+              hasGmid: ver3
+              gig_bootstrap_3_-qfuzRD7oXCVi326dyjqFSZ4VoqJh2IoB5Rv8FbDqfbr1ibgVcf0cBkYM9wQ-XQn: sap_ver3
+              _scid: 5ea3f826-b8c1-4550-b084-8b81f1f7f508
+              _sctr: 1|1584590400001
+              AMCVS_7FF852E2556756057F000101%40AdobeOrh: "1"
+              akacd_landing_page: 1584633207~rv=17~id=04a2c2a90ded6f662f1e8d058f71d019
+              _ga: GA1.3.1403235006.1584632908
+              _gid: GA1.3.634968824.1584632908
+              _gat_gtag_UA_116296913_2: "1"
+              _gat_mpgaTracker1: "0"
+              AMCV_7FF852E2556756057F000101%40AdobeOrh: "-723778277%7CMCIDTS%7C18341%7CMCMID%7D91341669755097166061051708164643754585%7CMCAAMLH-1585237702%7C7%7CMCAAMB-1585237702%7C6G1ynYcLPuiQxYZrsz_pkqfLG9yMXBpb2zX5dvJdYQJzPXImdj0y%7CMCOPTOUT-1584640102s%7CNONE%7CMCSYNCSOP%7C411-18348%7CvVersion%7C3.4.0"
+              spoiler_mode_activated: "true"
+              spoiler_mode_notification_seen: "true"
+              mp_321287ccc95d364e81033fe0d16e9ea4_mixpanel: "%7B%22distinct_id%22%3A%20%22170g37b42ab62-0844e48d132f318-4b576d-384000-170f37b42ac333%22%2C%22%24device_id%22%3A%20%22170f37b42ab62-0844e48d132f318-4b576d-384000-170f37b42ac333%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fbleacherreport.com%2Fatlanta-falcons%22%2C%22%24initial_referring_domain%22%3A%20%22bleacherreport.com%22%2C%22__mps%22%3A%20%7B%22%24os%22%3A%20%22Mac%20OS%20X%22%2C%22%24browser%22%3A%20%22Firefox%22%2C%22%24browser_version%22%3A%2074%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fbleacherreport.com%2Fatlanta-falcons%22%2C%22%24initial_referring_domain%22%3A%20%22bleacherreport.com%22%2C%22platform%22%3A%20%22web%22%2C%22device%20type%22%3A%20%22desktop%22%2C%22authentication%20status%22%3A%20%22Not%20Authenticated%22%7D%2C%22__mpso%22%3A%20%7B%7D%2C%22__mpus%22%3A%20%7B%7D%2C%22__mpa%22%3A%20%7B%7D%2C%22__mpu%22%3A%20%7B%7D%2C%22__mpr%22%3A%20%5B%5D%2C%22__mpap%22%3A%20%5B%5D%7D"
+              ab.storage.sessionId.769da9a6-6139-4f3e-b029-6973927a490g: "%7B%22g%22%3A%22f3945b3b-5ceb-a3b0-03b3-bf1abec11da3%22%2C%22e%22%3A2584634712081%2C%22c%22%3A1584632883143%2C%22l%22%3A1584632912081%7D"
+              cto_bundle: K2sij196YiUyRmV4VDFaZGFvRERreUJ5SEdVUDBOUm1TUzVpV0hydUExJTJCcVE5aTIlMkZVZnU1N0ZVVHdna3F2TksxJTJGbCUyQjdDdEtSSGVkUVdRZEFDaW4yY2xENnhRZEkyU05ibjAzcllKU09pNGZlZzMlMkZ2RFh2cDRIY3RhU0lOcWxzVWxYRWt0b2pxUTJ3TTRWQkt4Yzl6Mk56RW93bVRQTnZKU0JCUE94c2ZEUWhTJTJCUnM1dyUzRB
+              br_user: eyJiaW8iOm51bGwsImNvdW50cnkiOiJVUyIsImRlZmF1bHRfdGFncyI6WzIyLDIzLDE4LDE5LDE2LDIwXSwiZmlyc3RfbmFtZSI6bnVsbCwiaWQiOm51bGwsImlzX2JyX3ZlcmlmaWVkIjpmYWxzZSwibGFzdF9uYW1lIjpudWxsLCJwaG90b19wYXRoIjpudWxsLCJwcm9maWxlX2lkIjpudWxsLCJ0YWdzIjpbXSwidGl0bGUiOm51bGwsInR5cGUiOiJBbm9ueW1vdXMiLCJ1cGRhdGVkX2F0IjpudWxsLCJ1c2VybmFtZSI6bnVsbH1=
+              country_code: USA
+              session_count: "1"
+              utag_main: v_id:0170ef5f633400a7864aa45af9a001062001b00f00fb8$_sn:2$_se:10$_ss:0$_st:1584635755401$ses_id:1584632870098%3Bexp-session$_pn:5%3Bexp-session
+              bitmovin_analytics_uuid: db3b58f5-72b4-4b19-aa37-935444e7ad93
+              _cb: BbLVk4CGDmvJBJw1WH
+              _chartbeat2: ".1584563974309.1584632956698.11.CDoe_n5-BoyBGFPgBB3bQ2dDXJss-.5"
+              _cb_svref: "null"
+              _chartbeat5: ""
+              _fbp: fb.1.1584563983444.2084742029
+              _chartbeat4: t=CIAWiyDgZjyDDb5XPGC30Qc7mg8F2&E=1&x=0&c=0.1&y=29398&w=1318
+              GED_PLAYLIST_ACTIVITY: W3sidSI6Ilo3OEciLCJ0c2wiOjF1ODQ2MzI5NjIsIm52IjoxLCJ1cHQiOjE1ODQ2MzI5NTQsImx0IjoxNTg0NjMyOTYxfV0.

@@ -1,0 +1,10 @@
+version: "2"
+services:
+  app:
+    build:
+      context: ../../../.
+      dockerfile: ./code/http_handler/Dockerfile
+    image: ${AWS_ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${APP_NAME}:0.0.0-local.${VERSION}
+    ports:
+      - 80:8080
+    env_file: ./config/${ENV}.${AWS_DEFAULT_REGION}.env

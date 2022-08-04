@@ -1,0 +1,24 @@
+{
+  "appId": "test.sh",
+  "wmukid": "",
+  "brand": "example",
+  "domain": "example.org",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:75.0) Gecko/20100101 Firefox/75.0",
+  "platform": "web",
+  "ip": "127.0.0.1",
+  "city": "MARIETTA",
+  "state": "GA",
+  "zips": [
+    "30066"
+  ],
+  "country": "US",
+  "cookies": [{
+      "key": "portmeirion_id",
+      "value": "61b128b6-677e-4cf3-961b-7fbf12a6466b"
+    },
+    {
+      "key": "br_user_type",
+      "value": "Anonymous"
+    }
+  ]
+}

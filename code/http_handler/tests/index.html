@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CORS test</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("POST", "http://localhost:8080/v1/reg");
+      xmlhttp.setRequestHeader("Content-type", "application/json;charset=utf-8");
+      xmlhttp.send(JSON.stringify({ wmukid: "abc", appId: "123" }));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+[{
+    "Notification": {
+        "ComparisonOperator": "GREATER_THAN",
+        "NotificationType": "ACTUAL",
+        "Threshold": 100,
+        "ThresholdType": "PERCENTAGE"
+    },
+    "Subscribers": [
+    ]
+}]

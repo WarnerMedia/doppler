@@ -1,0 +1,65 @@
+{
+  "appId": "test-app-id",
+  "brand": "Prism",
+  "clientResolvedIp": "127.0.0.1",
+  "companyName": "Example",
+  "consentProperties": {},
+  "device": {
+    "type": ""
+  },
+  "eventId": "00000000-0000-0000-0000-000000000000",
+  "eventName": "identity on page start",
+  "eventProperties": {
+    "cookies": {},
+    "featureFlagValues": {}
+  },
+  "eventTimestamp": "2020-01-01T09:09:09.000Z",
+  "eventType": "identity",
+  "ids": {
+    "attuuid": {
+      "id": "b685b93f-57e5-4b28-8261-74842c405fe2",
+      "timestamp": 1612897038879
+    },
+    "intId": 8,
+    "kruxId": "N74fCQKH",
+    "emptyStringId": ""
+  },
+  "session": {
+    "sessionid": "000000000-00000000-00000000000-000001",
+    "sessionDuration": 390820389423,
+    "psmLastActiveTimestamp": "2021-03-17T20:01:45.525Z",
+    "psmSessionStart": "2021-03-17T20:01:45.525Z",
+    "isSessionStart": true,
+    "previousSession": {
+      "sessionid": "000000000-00000000-00000000000-000000",
+      "sessionDuration": 390820389422,
+      "psmLastActiveTimestamp": "2021-03-17T20:01:45.522Z",
+      "psmSessionStart": "2021-03-17T20:01:45.522Z",
+      "isSessionStart": false
+    }
+  },
+  "library": {
+    "initConfig": {},
+    "name": "PrismData",
+    "version": "1.0.0"
+  },
+  "location": {
+    "city": "ATLANTA",
+    "country": "US",
+    "language": "en",
+    "locale": "en-US",
+    "state": "GA",
+    "timezone": "UTC",
+    "zip": "30315"
+  },
+  "navigationProperties": {
+    "path": "/",
+    "referrer": "",
+    "rootDomain": "",
+    "search": "",
+    "title": "",
+    "url": "http://localhost/"
+  },
+  "productName": "Prism",
+  "sentAtTimestamp": "2020-01-01T09:09:09.000Z"
+}

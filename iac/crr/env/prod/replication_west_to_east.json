@@ -1,0 +1,38 @@
+{
+    "Role": "arn:aws:iam::${AWS_ACCOUNT}:role/doppler-${APP_NAME}-produswest2-replication-role-west",
+    "Rules": [{
+        "ID": "repl-west-to-east",
+        "Status": "Enabled",
+        "Priority": 1,
+        "DeleteMarkerReplication": {
+            "Status": "Enabled"
+        },
+        "Filter": {
+            "Prefix": ""
+        },
+        "SourceSelectionCriteria": {
+            "SseKmsEncryptedObjects": {
+                "Status": "Enabled"
+            }
+        },
+        "Destination": {
+            "Bucket": "arn:aws:s3:::doppler-${APP_NAME}-prod",
+            "StorageClass": "STANDARD",
+            "EncryptionConfiguration": {
+                "ReplicaKmsKeyID": ""
+            },
+            "ReplicationTime": {
+                "Status": "Enabled",
+                "Time": {
+                    "Minutes": 15
+                }
+            },
+            "Metrics": {
+                "Status": "Enabled",
+                "EventThreshold": {
+                    "Minutes": 15
+                }
+            }
+        }
+    }]
+}

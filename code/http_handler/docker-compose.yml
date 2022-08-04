@@ -1,0 +1,63 @@
+version: "2"
+services:
+  app:
+    build:
+      context: ../../../.
+      dockerfile: ./code/http_handler/Dockerfile
+    image: ${AWS_ACCOUNT}.dkr.ecr.us-east-1.amazonaws.com/${APP_NAME}:0.0.0-local.${VERSION}
+    ports:
+      - 8080:8080
+    env_file: ./config/dev2.us-east-1.env
+    environment:
+      HOST: kpl
+      ERROR_SOCKET_HOST: kpl
+      AWS_REGION: us-east-1
+      AWS_PROFILE: 
+    labels:
+      aws.ecs.fargate.deploy: 1
+    volumes:
+      - $HOME/.aws/credentials:/root/.aws/credentials:ro
+    depends_on: [kpl, role]
+
+  kpl:
+    image: public.ecr.aws/v6s5y4v7/kplserver:v0.2.20
+    environment:
+      PORT: 3000
+      AWS_DEFAULT_REGION: us-east-1
+      KINESIS_STREAM: doppler-${APP_NAME}-dev
+      AWS_PROFILE: 
+    volumes:
+      - $HOME/.aws/credentials:/root/.aws/credentials:ro
+    depends_on: [role]
+
+  #cloudwatch-agent:
+  #  image: public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest
+  #  environment:
+  #    CW_CONFIG_CONTENT: doppler-${APP_NAME}-dev
+  #  depends_on: [role]
+
+  # aws role support
+  role:
+    image: quay.io/turner/ectou-metadata
+    ports:
+      - 9000:80
+    environment:
+      # the role you want your container to assume
+      ROLE: arn:aws:iam::${AWS_ACCOUNT}:role/doppler-dev
+
+      # the local profile you want to use to assume the role
+      AWS_PROFILE: 
+
+    volumes:
+      - $HOME/.aws/credentials:/root/.aws/credentials:ro
+    networks:
+      default:
+        ipv4_address: 127.0.0.1
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 127.0.0.1/16
+          gateway: 127.0.0.1

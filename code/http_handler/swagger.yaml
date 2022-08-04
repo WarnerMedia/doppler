@@ -1,0 +1,473 @@
+openapi: 3.0.0
+info:
+  title: Doppler API
+  description: This document describes behaviour of Doppler APIs.
+  version: 1.0.0
+servers:
+  - url: https://test.${DOMAIN_NAME}/v1
+    description: Test Server
+  - url: https://dev.${DOMAIN_NAME}/v1
+    description: Dev Server for dev testing.
+  - url: https://${DOMAIN_NAME}/v1
+    description: Production Server
+paths:
+  /reg:
+    post:
+      summary: Register a single user activity.
+      description: Registration API accepts a user activity in json payload and queue it for further processing.
+      tags:
+        - Registration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InternalEvent'
+
+      responses:
+        '201':
+          description: Successfully registered the activity.
+        '405':
+          description: Invalid HTTP method used
+        '400':
+          description: API responds with 400 when activity cannot be registered because of some issue in data provided in API.
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Incorrect-Content-Type:
+                  description: "Only json payload is supported"
+                  value: unsupported media type
+                Incorrect-Content-Length:
+                  description: "Value should be between 1 and 20000 both inclusive"
+                  value: invalid ContentLength
+                Unreadable-Payload:
+                  description: "Error in reading payload from the request"
+                  value: unable to read body
+                Incorrect-Payload:
+                  description: "Error in encoding payload. Check data type of each field"
+                  value: unable to parse body
+                Invalid-Payload:
+                  description: "Payload is missing the required field(s)"
+                  value: missing required field
+                Unprocessable-Payload:
+                  description: "Payload could not be sent for processing"
+                  value: ''
+
+components:
+  schemas:
+
+    WMUKIDResponse:
+      properties:
+        wmukid:
+          type: string
+          format: uuid
+          description: An unknown id
+
+    InternalEvent:
+      allOf:
+        - $ref: "#/components/schemas/EventProperties"
+        - title: Internal User Activity
+          type: object
+          required:
+            - wmukid
+
+    EventProperties:
+      type: object
+      properties:
+        wmukid:
+          type: string
+          format: uuid
+          description: An unknown id
+        appId:
+          type: string
+          format: text
+          description: Provided app id
+          example: ae59f25a81c9d440000a83809
+
+        userId:
+          type: string
+          format: uuid
+          description: A Uniqueue ID for the user
+
+        brand:
+          type: string
+          format: uuid
+          description: Your brand name
+          example: Example
+
+        subBrand:
+          type: string
+          format: text
+          description: Your Sub brand name
+          example: example.org
+
+        platform:
+          type: string
+          format: text
+          description: Platform where this activity is getting generated. For Example, web, iOS, android etc
+          example: web
+
+        clientResolvedIp:
+          type: string
+          format: ipv4
+          description: IP address of client. Either IPv4 or IPv6 address is fine.
+
+        companyName:
+          type: string
+          format: text
+          description: Name of your company
+          example: Example
+
+        eventId:
+          type: string
+          format: uuid
+          description: A unique ID for this event
+
+        eventName:
+          type: string
+          format: text
+          description: Catagory of this event
+          example: identity on page complete
+
+        eventTimestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the time
+
+        eventType:
+          type: string
+          enum: [ identity, doppler.psm.resolve ]
+          description: type of the event
+
+        productName:
+          type: string
+          format: text
+          description: Name of the product generating this event
+          example: CNN
+
+        sentAtTimestamp:
+          type: string
+          format: date-time
+          description: Timestamp of when this event was sent
+
+        ids:
+          type: object
+          properties:
+            wmhhid:
+              type: string
+              format: text
+              example: "BvmENginx7XsFq4"
+            attuuid:
+              type: string
+              format: uuid
+            ecid:
+              type: string
+              format: text
+              example: "86710442174506824850274925432118236443"
+            cdpid:
+              type: string
+              format: uuid
+            convivaid:
+              type: string
+              format: text
+              example: "3775679127.3853105118.1996493868.1801067516"
+          additionalProperties:
+            type: string
+          example: {
+            "wmhhid": "BvmENginx7XsFq4",
+            "attuuid": "d9ed4607-2548-55b8-950d-6349b16a3e01",
+            "ecid": "MIMIC|86710442174506824850274925432118236443",
+            "cdpid": "49ad1ca8-c354-4c97-85cc-6e5271fd3c20",
+            "convivaid": "3775679127.3853105118.1996493868.1801067516"
+          }
+          description: various ids for this event corresponding to other products
+
+        session:
+          type: object
+          properties:
+            issessionstart:
+              type: boolean
+            psmlastactivetimestamp:
+              type: string
+              format: date-time
+            sessionduration:
+              type: string
+              format: number
+              example: 192.123
+            psmsessionstart:
+              type: string
+              format: date-time
+            sessionid:
+              type: string
+              format: uuid
+          example: { "issessionstart": false,"psmlastactivetimestamp": "2021-04-14T01:14:29.770Z","sessionduration": "193.426","psmsessionstart": "2021-04-14T01:11:16.344Z","sessionid": "ed189180-97e7-45ed-abac-e099813cfee7" }
+          description: Session information for this event
+
+        library:
+          type: object
+          properties:
+            initconfig:
+              type: object
+              properties:
+                cookiesecure:
+                  type: boolean
+                psmenvironment:
+                  type: string
+                  example: PROD
+                subbrand:
+                  type: string
+                  example: example.org
+                appid:
+                  type: string
+                  example: ae4f25a81c9d440000a83809
+                cookiesamesite:
+                  type: string
+                  example: Lax
+                cookieexpires:
+                  type: string
+                  format: integer
+                  example: 31536000000
+                  description: EPOCH time
+                brand:
+                  type: string
+                  example: CNN
+                platform:
+                  type: string
+                  example: web
+                cookieuserootdomain:
+                  type: boolean
+          example: { "initconfig": { "cookiesecure": false,"psmenvironment": "PROD","subbrand": "example.org","appid": "5e9f25a81c9d440000a83808","countrycode": "US","cookiesamesite": "Lax","cookieexpires": "31536000000","brand": "Example","platform": "web","cookieuserootdomain": true },"name": "PrismJS","version": "2.1.0" }
+          description: Information about the library used to send this event
+
+        location:
+          type: object
+          properties:
+            zip:
+              type: string
+              format: int
+              example: 600001
+            country:
+              type: string
+              format: text
+              example: US
+              minLength: 2
+              maxLength: 2
+              description: ISO-2 code of the country
+            city:
+              type: string
+              example: "TX"
+              minLength: 2
+              maxLength: 2
+            timezone:
+              type: string
+              example: "America/Chicago"
+            language:
+              type: string
+              example: "en"
+              minLength: 2
+              maxLength: 2
+            locale:
+              type: string
+              example: "en-US"
+              minLength: 5
+              maxLength: 5
+          example: { "zip": "78664","country": "US","city": "AUSTIN","timezone": "America/Chicago","language": "en","state": "TX","locale": "en-US" }
+          description: Location information of the users
+
+        navigationProperties:
+          type: object
+          properties:
+            path:
+              type: string
+              example: "/"
+            referer:
+              type: string
+              format: uri
+            search:
+              type: string
+              example: "The latest news"
+            title:
+              type: string
+              example: "Breaking News, The Latest News and Videos"
+            url:
+              type: string
+              format: uri
+            rootdomain:
+              type: string
+              example: example.org
+          example: { "path": "/","referrer": "","search": "","title": "Breaking News, The Latest News and Videos","url": "https://www.example.org/","rootdomain": "example.org" }
+          description: Infromation about user navigation on the page
+
+        eventProperties:
+          type: object
+          properties:
+            featureflagvalues:
+              type: object
+              additionalProperties:
+                type: object
+                description: Key should be an integer starting with 0
+                properties:
+                  updatedsincelastquery:
+                    type: boolean
+                    description: whether flag has changes sinse last query
+                  clientid:
+                    type: string
+                    description: id of the client
+                    example: psmFFClient-example.org
+                  flagname:
+                    type: string
+                    description: name of the flag
+                    example: idresolve
+                  flagid:
+                    type: string
+                    description: id of the flag
+                    example: idresolve
+                  enabled:
+                    type: boolean
+                    description: whether this flag is enabled
+                    example: idresolve
+                  warnings:
+                    type: object
+                    additionalProperties:
+                      type: string
+                    description: whether this flag is enabled
+                    example: { }
+
+            donottrack:
+              type: boolean
+              description: Whether user has tracking enabled or not
+
+            cookiesenabled:
+              type: boolean
+              description: Whether user has cockies enabled or not
+
+            cookies:
+              type: object
+              description: user cookies
+              example: {
+                "_mfuuid_": "a2edffe9-494f-4bf3-acec-86da429342c9",
+                "usprivacy": "1YNN",
+                "countrycode": "US",
+                "_cb_svref": "null",
+                "_bts": "b886008c-1fab-4ed2-ca59-81db201a541d"
+              }
+              additionalProperties:
+                type: string
+          example: {
+            "featureflagvalues": {
+              "0": {
+                "updatedsincelastquery": false,
+                "clientid": "psmFFClient-example.org",
+                "warnings": { },
+                "flagid": "idresolve",
+                "flagname": "idresolve",
+                "enabled": true
+              },
+              "1": {
+                "updatedsincelastquery": false,
+                "useridtype": "ffUserId",
+                "clientid": "psmFFClient-example.org",
+                "warnings": { },
+                "flagid": "sendHHID",
+                "flagname": "sendHHID",
+                "userid": "70ab8ff1-2f13-4dae-bc3f-1724de12ab62",
+                "enabled": false
+              }
+            },
+            "donottrack": true,
+            "cookiesenabled": true,
+            "cookies": {
+              "_mfuuid_": "a2edffe9-494f-4bf3-acec-86da429342c9",
+              "usprivacy": "1YNN",
+              "countrycode": "US",
+              "_cb_svref": "null",
+              "_bts": "b886008c-1fab-4ed2-ca59-81db201a541d"
+            }
+          }
+          description: Any other property of the event including cookies not covered in other fields
+
+        consentProperties:
+          type: object
+          additionalProperties: true
+          properties:
+            upstream:
+              type: string
+              example: 1YNN
+              description: A US Privacy string. More details can be found about it here https://github.com/InteractiveAdvertisingBureau/USPrivacy/blob/master/CCPA/US%20Privacy%20String.md
+          example: { "uspstring": "1YNN" }
+          description: User consent data
+
+        device:
+          type: object
+          additionalProperties: true
+          properties:
+            type:
+              type: string
+              example: iPhone
+              description: Type of the device user is using. e.g. iPhone, Android, Browser
+            useragent:
+              type: string
+              example: Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1
+          description: User device infromation
+          example: { "useragent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1","type": "iPhone" }
+
+        contentMetadata:
+          type: object
+          description: Content Metadata include more data about the request
+          example: {
+            "page": {
+              "section": "asdf",
+              "author": "asdf"
+            },
+            "video": {
+              "title": "asdf"
+            }
+          }
+          additionalProperties: true
+          properties:
+            page:
+              type: object
+              additionalProperties: true
+              properties:
+                section:
+                  type: string
+                author:
+                  type: string
+                  description: Name of the page author
+            videos:
+              type: object
+              additionalProperties: true
+              properties:
+                title:
+                  type: string
+                  description: the title of the videos
+
+        adsProperties:
+          type: object
+          description: Ad-specific properties
+          example: {
+            "guid": "asdf",
+            "transid": "asdf"
+          }
+          additionalProperties: true
+          properties:
+            guid:
+              type: string
+            transid:
+              type: string
+        networkProperties:
+          type: object
+          description: Properties related to the networking of the client
+          example: {
+            "connectionType": "Cellular",
+            "isp": "Verizon"
+          }
+          additionalProperties: true
+          properties:
+            connectionType:
+              type: string
+            isp:
+              isp: string
+        hhidVersion:
+          type: integer
+          example: 9
+          description: The graph version of the house hold id(HHID) 

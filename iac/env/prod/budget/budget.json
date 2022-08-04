@@ -1,0 +1,21 @@
+{
+  "BudgetLimit": {
+    "Amount": "350",
+    "Unit": "USD"
+  },
+  "BudgetName": "${APP_NAME}-prod-budget-monthly",
+  "BudgetType": "COST",
+  "CostFilters": {
+    "TagKeyValue": [
+      "user:application$${APP_NAME}",
+      "user:environment$prod"
+    ]
+  },
+  "CostTypes": {
+    "UseAmortized": true
+  },
+  "TimePeriod": {
+    "Start": 1596240000
+  },
+  "TimeUnit": "MONTHLY"
+}

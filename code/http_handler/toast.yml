@@ -1,0 +1,104 @@
+image: node:17
+tasks:
+
+  configure:
+    dependencies:
+      - serverless-artillery
+    input_paths:
+      - .
+    output_paths:
+      - tests/load
+    command: |
+      export PATH="$NPM_CONFIG_PREFIX/bin:${PATH}"
+      cd tests/load
+      slsart configure
+
+  deploy:
+    dependencies:
+      - serverless-artillery
+    input_paths:
+      - .
+    command: |
+      set -ex
+      export PATH="$NPM_CONFIG_PREFIX/bin:${PATH}"
+      cd tests/load
+      slsart deploy --stage $STAGE
+
+  invoke:
+    dependencies:
+      - deploy
+    input_paths:
+      - .
+    cache: false
+    command: |
+      export PATH="$NPM_CONFIG_PREFIX/bin:${PATH}"
+      cd tests/load
+      slsart invoke --stage $STAGE
+
+  kill:
+    dependencies:
+      - serverless-artillery
+    input_paths:
+      - .
+    command: |
+      export PATH="$NPM_CONFIG_PREFIX/bin:${PATH}"
+      cd tests/load
+      slsart kill --stage $STAGE --region=us-east-1
+
+  remove:
+    dependencies:
+      - serverless-artillery
+    input_paths:
+      - .
+    command: |
+      export PATH="$NPM_CONFIG_PREFIX/bin:${PATH}"
+      cd tests/load
+      slsart remove --stage $STAGE
+
+
+  # tool installers
+
+  core:
+    environment:
+      AWS_PROFILE: 
+    command: |
+      set -ex
+      apt-get update
+      apt-get install -y curl unzip
+
+  aws:
+    dependencies:
+      - core
+    input_paths:
+      - .
+    command: |
+      set -ex
+      curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      unzip awscliv2.zip
+      ./aws/install
+      mkdir ~/.aws
+      aws --version
+
+  serverless:
+    dependencies:
+      - aws
+    environment:
+      NPM_CONFIG_PREFIX: /home/node/.npm-global
+    command: |
+      set -ex
+      export PATH="$NPM_CONFIG_PREFIX/bin:${PATH}"
+      npm config set user 0
+      npm config set unsafe-perm true      
+      npm i -g serverless
+      sls --version
+
+  serverless-artillery:
+    environment:
+      STAGE: doppler-prod
+    dependencies:
+      - serverless
+    command: |
+      set -ex
+      export PATH="$NPM_CONFIG_PREFIX/bin:${PATH}"
+      npm i -g serverless-artillery
+      slsart --version
